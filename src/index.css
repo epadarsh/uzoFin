@@ -1,0 +1,109 @@
+@import 'tailwindcss';
+
+@theme {
+  --font-sans: 'Poppins', system-ui, sans-serif;
+
+  /* brand gradient: violet -> magenta, used for CTAs and gradient headline accents */
+  --color-brand-50: #f6f1ff;
+  --color-brand-100: #ece0ff;
+  --color-brand-300: #c79dff;
+  --color-brand-400: #a768f5;
+  --color-brand-500: #8a3ffc;
+  --color-brand-600: #7b2ff0;
+  --color-brand-700: #631fc7;
+
+  --color-accent-pink: #ff3f8e;
+  --color-accent-orange: #ff9a3f;
+  --color-accent-blue: #3f9aff;
+  --color-accent-green: #2fd48f;
+
+  --color-ink-900: #0b0712;
+  --color-ink-700: #241b33;
+  --color-ink-500: #6b6375;
+
+  --breakpoint-xs: 420px;
+}
+
+:root {
+  color-scheme: light;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  font-family: var(--font-sans);
+  color: var(--color-ink-900);
+  background: #fff;
+  overflow-x: hidden;
+}
+
+/* gradient text helper used for headline accents across sections */
+.gradient-text {
+  background: linear-gradient(
+    90deg,
+    var(--color-brand-500),
+    var(--color-accent-pink)
+  );
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+}
+
+/* gradient CTA button base, hover brightens per Property 1=Hover.png */
+.btn-gradient {
+  background: linear-gradient(98.88deg, #8c01fa -2.99%, #000000 102.28%);
+  border: 1px solid #8c01fa;
+  transition:
+    filter 0.25s ease,
+    transform 0.25s ease,
+    /* box-shadow 0.25s ease; */
+  
+}
+
+.btn-outline::before {
+  content: '';
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  padding: 1px;
+  background: linear-gradient(98.88deg, #BA9CFF, #300056);
+  -webkit-mask:
+    linear-gradient(#fff 0 0) content-box,
+    linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+  transition: background 0.3s ease;
+}
+
+.btn-outline:hover::before {
+  background: linear-gradient(98.88deg, #300056, #BA9CFF);
+}
+.btn-gradient:hover {
+  background: linear-gradient(98.88deg, #8c01fa -2.99%, #440178 102.28%);
+  border: none;
+  filter: brightness(1.12) saturate(1.1);
+  transform: translateY(-1px);
+  /* box-shadow: 0 12px 30px -10px var(--color-brand-500); */
+}
+
+.btn-gradient:active {
+  transform: translateY(0);
+  filter: brightness(1.02);
+}
+
+::selection {
+  background: var(--color-brand-300);
+  color: var(--color-ink-900);
+}
