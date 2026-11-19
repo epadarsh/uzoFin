@@ -6,10 +6,22 @@ import SoundToggle from '../ui/SoundToggle.jsx'
 import { NAV_LINKS } from './navLinks.js'
 import { useSound } from '../../hooks/soundContext.js'
 
-/** Slide-in mobile navigation panel, shown below the `lg` breakpoint. */
+/**
+ * Slide-in mobile navigation panel, shown below the `lg` breakpoint.
+ * Reuses the same NAV_LINKS data as the desktop header, rendering dropdown
+ * entries as expandable accordion sections instead of hover menus.
+ *
+ * @param {object} props
+ * @param {boolean} props.open - whether the panel is currently open.
+ * @param {() => void} props.onClose - called to close the panel (overlay click, X button, link tap, or Escape).
+ */
 export default function MobileNav({ open, onClose }) {
+  // Backdrop behind the panel; faded in/out via GSAP opacity tween.
   const overlayRef = useRef(null)
+  // The sliding panel itself; translated in/out along the x-axis via GSAP.
   const panelRef = useRef(null)
+  // Tracks which dropdown accordion section (if any) is currently expanded;
+  // `null` means all sections are collapsed.
   const [expanded, setExpanded] = useState(null)
   const { playClick } = useSound()
 
@@ -17,6 +29,7 @@ export default function MobileNav({ open, onClose }) {
     if (!overlayRef.current || !panelRef.current) return undefined
 
     if (open) {
+      // Prevent the page behind the panel from scrolling while it's open.
       document.body.style.overflow = 'hidden'
       gsap.to(overlayRef.current, { autoAlpha: 1, duration: 0.25, ease: 'power2.out' })
       gsap.to(panelRef.current, { x: 0, duration: 0.4, ease: 'power3.out' })
@@ -26,16 +39,22 @@ export default function MobileNav({ open, onClose }) {
       gsap.to(panelRef.current, { x: '100%', duration: 0.35, ease: 'power3.in' })
     }
 
+    // Allow dismissing the panel with the Escape key while it's open.
     const onKeyDown = (event) => {
       if (event.key === 'Escape') onClose()
     }
     document.addEventListener('keydown', onKeyDown)
     return () => {
       document.removeEventListener('keydown', onKeyDown)
+      // Always restore scrolling on cleanup, in case the component unmounts
+      // while the panel was open.
       document.body.style.overflow = ''
     }
   }, [open, onClose])
 
+  // Shared close handler for every dismissal path (overlay click, X button,
+  // link/sub-item tap): plays the click tone, closes the panel, and resets
+  // any expanded accordion section so it reopens collapsed next time.
   const closeAndReset = () => {
     playClick()
     onClose()
@@ -44,6 +63,7 @@ export default function MobileNav({ open, onClose }) {
 
   return (
     <div className="lg:hidden" aria-hidden={!open}>
+      {/* Dimmed backdrop; tapping it closes the panel. */}
       <div
         ref={overlayRef}
         onClick={closeAndReset}
@@ -53,6 +73,7 @@ export default function MobileNav({ open, onClose }) {
         ref={panelRef}
         className="fixed right-0 top-0 z-50 h-full w-80 max-w-[85%] translate-x-full bg-ink-900 p-6 shadow-2xl"
       >
+        {/* Panel header: logo + close (✕) button. */}
         <div className="flex items-center justify-between">
           <Logo />
           <button
@@ -74,12 +95,16 @@ export default function MobileNav({ open, onClose }) {
 
         <nav className="mt-8 flex flex-col gap-1">
           {NAV_LINKS.map((link) =>
+            // Links with sub-items ('Payments', 'Payouts') render as an
+            // expandable accordion row instead of the desktop hover dropdown.
             link.items ? (
               <div key={link.label} className="border-b border-white/10">
                 <button
                   type="button"
                   onClick={() => {
                     playClick()
+                    // Toggle: tapping an already-expanded section collapses it,
+                    // tapping a different one switches to it.
                     setExpanded((prev) => (prev === link.label ? null : link.label))
                   }}
                   className="flex w-full items-center justify-between py-3 text-sm text-white/80"
@@ -111,6 +136,8 @@ export default function MobileNav({ open, onClose }) {
                         key={item}
                         href="#"
                         onClick={(event) => {
+                          // Sub-items are display-only placeholders (no real
+                          // destinations yet), so just close the menu.
                           event.preventDefault()
                           closeAndReset()
                         }}
@@ -123,6 +150,7 @@ export default function MobileNav({ open, onClose }) {
                 )}
               </div>
             ) : (
+              // Plain link — no sub-items, just navigate and close the panel.
               <a
                 key={link.label}
                 href={link.href}
@@ -137,6 +165,7 @@ export default function MobileNav({ open, onClose }) {
           )}
         </nav>
 
+        {/* Panel footer: primary CTA + sound mute toggle. */}
         <div className="mt-8 flex items-center gap-3">
           <Button href="#start-building" size="sm" onClick={closeAndReset} className="flex-1">
             START BUILDING

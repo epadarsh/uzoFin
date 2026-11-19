@@ -47,6 +47,7 @@ function ArrowIcon() {
   )
 }
 
+/** One card in a marquee row: title + description over a gradient background image. */
 function FeatureCard({ title, description, background }) {
   return (
     <div
@@ -64,6 +65,10 @@ function FeatureCard({ title, description, background }) {
   )
 }
 
+/**
+ * One infinitely auto-scrolling row of FeatureCards, wired up via useMarquee.
+ * `direction` controls whether it scrolls left (1) or right (-1).
+ */
 function MarqueeRow({ cards, direction, background }) {
   const trackRef = useMarquee({ speed: 45, direction })
 
@@ -82,6 +87,9 @@ function MarqueeRow({ cards, direction, background }) {
 export default function WhyUzoFin() {
   const headingRef = useScrollReveal({ y: 24, stagger: 0.1 })
 
+  // Each row reuses a different subset/ordering of the shared CARDS pool so
+  // the three rows don't look identical, while still only needing 7 unique
+  // card definitions total.
   const row1 = [CARDS[0], CARDS[1], CARDS[2], CARDS[3]]
   const row2 = [CARDS[3], CARDS[4], CARDS[5], CARDS[6]]
   const row3 = [CARDS[1], CARDS[6], CARDS[5], CARDS[4]]
@@ -101,6 +109,9 @@ export default function WhyUzoFin() {
         </p>
       </div>
 
+      {/* Rows alternate scroll direction (1, -1, 1) and each uses a different
+          gradient background image, matching the layered marquee effect in
+          the reference design. */}
       <div className="mt-14 space-y-5">
         <MarqueeRow cards={row1} direction={1} background={gradient1} />
         <MarqueeRow cards={row2} direction={-1} background={gradient2} />

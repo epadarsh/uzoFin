@@ -6,8 +6,11 @@ import gradient1 from '../../assets/testimonials/gradient-1.png'
 import gradient2 from '../../assets/testimonials/gradient-2.png'
 import gradient3 from '../../assets/testimonials/gradient-3.png'
 
+// Cycled across the card list below (via index % length) so the 10 cards
+// don't all share the exact same background image.
 const CARD_BACKGROUNDS = [gradient1, gradient2, gradient3]
 
+// Content for each card in the auto-scrolling "Industry Standard" marquee.
 const INDUSTRY_CARDS = [
 	{
 		title: 'Scalability & Integration',
@@ -61,12 +64,19 @@ const INDUSTRY_CARDS = [
 	},
 ]
 
+/**
+ * One card in the Industry Standard marquee: title/description over a
+ * gradient background, with a decorative blurred "blob" glow behind it and
+ * a checkmark icon that fades/slides in on hover.
+ */
 function IndustryCard({ title, description, background }) {
 	return (
 		<article
 			className="group relative flex min-h-72 w-70 shrink-0 flex-col justify-center overflow-hidden rounded-3xl border border-white/10 px-8 py-10 text-center shadow-2xl shadow-black/30 bg-cover bg-center transition-transform duration-300 hover:-translate-y-2 sm:w-85"
 			style={{ backgroundImage: `url(${background})` }}
 		>
+			{/* Decorative blurred glow layers, purely cosmetic (negative z-index
+			    keeps them behind the card's text content). */}
 			<div className="absolute inset-0 -z-10 overflow-hidden rounded-3xl">
 				<div className="h-full w-full animate-blob rounded-3xl opacity-70 blur-3xl" />
 				<div className="absolute right-1/2 top-1/2 -z-10 -translate-x-1/2 -translate-y-1/2 transform-gpu overflow-hidden rounded-full">
@@ -90,6 +100,9 @@ function IndustryCard({ title, description, background }) {
 				Know more
 			</a>
 
+			{/* Checkmark badge, hidden by default and animated in (slide up +
+			    fade in) only when the card is hovered, via the `group`/`group-hover`
+			    Tailwind utilities on the parent <article>. */}
 			<span
 				aria-hidden="true"
 				className="absolute right-5 bottom-5 translate-y-3 opacity-0 transition-all duration-500 ease-out group-hover:translate-y-0 group-hover:opacity-100"
@@ -121,6 +134,12 @@ function IndustryCard({ title, description, background }) {
 	)
 }
 
+/**
+ * The scrolling track of IndustryCards. Combines the horizontal useMarquee
+ * loop with an extra per-card vertical "bob" animation, so alternating cards
+ * float up and down out of phase with each other while the whole row drifts
+ * sideways.
+ */
 function IndustryMarquee() {
 	const trackRef = useMarquee({ speed: 38, direction: 1 })
 
@@ -128,13 +147,20 @@ function IndustryMarquee() {
 		const container = trackRef.current
 		if (!container) return undefined
 
+		// Select every rendered <article> (IndustryCard) inside the marquee
+		// track, including the clone useMarquee creates internally, so both
+		// copies bob in sync.
 		const cards = container.querySelectorAll('article')
 		const tween = gsap.to(cards, {
+			// Even-indexed cards drift up, odd-indexed cards drift down, creating
+			// an alternating wave pattern across the row.
 			y: (index) => (index % 2 === 0 ? -32 : 32),
 			duration: 1,
 			ease: 'sine.inOut',
 			yoyo: true,
 			repeat: -1,
+			// Slight delay between each card's animation start, so they don't
+			// all move in perfect lockstep.
 			stagger: 0.12,
 		})
 

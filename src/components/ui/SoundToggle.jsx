@@ -1,6 +1,13 @@
 import { useSound } from '../../hooks/soundContext.js'
 
-/** Mute/unmute toggle for the site's click/hover sound effects. */
+/**
+ * Mute/unmute toggle for the site's click/hover sound effects.
+ * Reads/writes the shared `muted` state from SoundProvider, so toggling it
+ * here affects every component that calls `playClick`/`playHover`.
+ *
+ * @param {object} props
+ * @param {string} [props.className] - extra classes merged onto the root button.
+ */
 export default function SoundToggle({ className = '' }) {
   const { muted, toggleMute, playClick } = useSound()
 
@@ -8,6 +15,10 @@ export default function SoundToggle({ className = '' }) {
     <button
       type="button"
       onClick={() => {
+        // Flip the mute state, then play the click tone — note this means the
+        // tone plays even when *muting*, giving a satisfying confirmation
+        // sound right before audio goes silent (it uses the pre-toggle state
+        // captured in the `playClick` closure from the last render).
         toggleMute()
         playClick()
       }}
@@ -17,6 +28,7 @@ export default function SoundToggle({ className = '' }) {
       className={`flex h-9 w-9 items-center justify-center rounded-full border border-white/15 text-white/70 transition-colors hover:border-white/30 hover:text-white ${className}`}
     >
       {muted ? (
+        // Speaker-with-X glyph, shown when sound is currently muted.
         <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
           <path
             d="M2 6h2.5L8 3.2v9.6L4.5 10H2V6Z"
@@ -30,6 +42,7 @@ export default function SoundToggle({ className = '' }) {
           />
         </svg>
       ) : (
+        // Speaker-with-waves glyph, shown when sound is currently enabled.
         <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
           <path d="M2 6h2.5L8 3.2v9.6L4.5 10H2V6Z" fill="currentColor" />
           <path

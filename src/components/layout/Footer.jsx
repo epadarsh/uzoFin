@@ -2,6 +2,8 @@ import Logo from '../ui/Logo.jsx'
 import { useScrollReveal } from '../../hooks/useScrollReveal.js'
 import { useSound } from '../../hooks/soundContext.js'
 
+// Static footer link columns (label + list of link text). Hrefs are all
+// placeholders ('#') since there's no backend/routing to point them at yet.
 const COLUMNS = [
 	{
 		title: 'Products',
@@ -23,6 +25,8 @@ const COLUMNS = [
 	},
 ]
 
+// Social links with a per-brand background color (`bg`) so each icon circle
+// matches its platform's real brand color instead of a single uniform color.
 const SOCIAL = [
 	{ label: '/uzofin', name: 'LinkedIn', icon: 'in', bg: 'bg-[#0A66C2]' },
 	{ label: '/uzofin', name: 'X', icon: 'x', bg: 'bg-black' },
@@ -35,6 +39,11 @@ const SOCIAL = [
 	{ label: '/uzofin', name: 'Facebook', icon: 'fb', bg: 'bg-[#1877F2]' },
 ]
 
+/**
+ * Renders one of four hand-drawn SVG glyphs (LinkedIn, X, Instagram,
+ * Facebook) based on the `icon` key from a SOCIAL entry. Falls back to the
+ * Facebook glyph for any unrecognized key.
+ */
 function SocialIcon({ icon }) {
 	switch (icon) {
 		case 'in':
@@ -105,6 +114,7 @@ function SocialIcon({ icon }) {
 }
 
 export default function Footer() {
+	// Fade + stagger each grid column into view as the footer scrolls in.
 	const ref = useScrollReveal({ stagger: 0.08, y: 24 })
 	const { playClick, playHover } = useSound()
 
@@ -115,6 +125,8 @@ export default function Footer() {
 					ref={ref}
 					className="grid grid-cols-2 gap-10 sm:grid-cols-3 lg:grid-cols-6"
 				>
+					{/* Brand column: logo, tagline, short description. Spans 2 grid
+					    columns so it reads as a distinct block from the link lists. */}
 					<div className="col-span-2 lg:col-span-2">
 						<Logo size="large" />
 						<p className="mt-4 text-sm font-medium text-white/80">
@@ -126,6 +138,7 @@ export default function Footer() {
 						</p>
 					</div>
 
+					{/* Products / Company / Legal link columns, generated from COLUMNS. */}
 					{COLUMNS.map((col) => (
 						<div key={col.title}>
 							<h3 className="text-xs font-semibold tracking-wide text-sky-400">
@@ -137,6 +150,8 @@ export default function Footer() {
 										<a
 											href="#"
 											onClick={(event) => {
+												// Links are placeholders (no routes/pages behind
+												// them yet), so just play feedback and stay on page.
 												event.preventDefault()
 												playClick()
 											}}
@@ -151,6 +166,8 @@ export default function Footer() {
 						</div>
 					))}
 
+					{/* Social icon column — each icon's background color comes from
+					    social.bg to match the platform's real brand color. */}
 					<div>
 						<h3 className="text-xs font-semibold tracking-wide text-sky-400">
 							SOCIAL
@@ -179,6 +196,7 @@ export default function Footer() {
 					</div>
 				</div>
 
+				{/* Bottom legal bar: copyright + locale indicator. */}
 				<div className="mt-12 flex flex-col gap-3 border-t border-white/10 pt-6 text-xs text-white/40 sm:flex-row sm:items-center sm:justify-between">
 					<p>Copyright © 2026 UzOFin. All rights reserved</p>
 					<p>India (EN)</p>

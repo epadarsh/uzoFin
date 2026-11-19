@@ -14,8 +14,11 @@ const LOGOS = [
   'Adyen',
 ]
 
+/** Section 2 — "trusted by" strip: a heading over an infinite logo marquee. */
 export default function LogoStrip() {
   const headingRef = useScrollReveal({ y: 16 })
+  // Scrolls the logo list left at a constant 55px/s, looping seamlessly via
+  // the clone-and-tween technique in useMarquee.
   const marqueeRef = useMarquee({ speed: 55 })
 
   return (
@@ -26,6 +29,8 @@ export default function LogoStrip() {
         </p>
       </div>
 
+      {/* useMarquee expects a single "track" child (the <ul> below); it clones
+          this element internally to create the seamless loop. */}
       <div ref={marqueeRef} className="mt-10 flex overflow-hidden">
         <ul className="flex shrink-0 items-center gap-16 px-8">
           {LOGOS.map((name) => (

@@ -7,12 +7,17 @@ import { useEffect, useRef } from 'react'
 /** Section 5 — API callout with a slowly floating line-art background. */
 export default function ApiCta() {
   const contentRef = useScrollReveal({ y: 24, stagger: 0.1 })
+  // The decorative line-art background image, animated with a simple
+  // yoyo-repeat GSAP tween (not scroll-driven, just a continuous ambient drift).
   const bgRef = useRef(null)
 
   useEffect(() => {
     const el = bgRef.current
     if (!el) return undefined
 
+    // Gently drift the background up and down forever: `yoyo: true` reverses
+    // the tween back to its start instead of snapping, and `repeat: -1` loops
+    // indefinitely.
     const tween = gsap.to(el, {
       y: 18,
       duration: 4,

@@ -4,19 +4,29 @@ import { useSound } from '../../hooks/soundContext.js'
 /**
  * Nav dropdown with a chevron that flips open/closed (see Nav.png).
  * Closes on outside click, escape, or selecting an item.
+ *
+ * @param {object} props
+ * @param {string} props.label - the trigger button's visible text.
+ * @param {string[]} props.items - list of menu item labels (placeholder links, no real hrefs yet).
  */
 export default function Dropdown({ label, items }) {
   const [open, setOpen] = useState(false)
+  // Root wrapper, used to detect clicks that land outside the dropdown.
   const rootRef = useRef(null)
+  // Holds the pending "close after mouse leaves" timer id, so hovering back
+  // in before it fires can cancel it (avoids flicker on quick re-entry).
   const closeTimeoutRef = useRef(null)
   const { playClick, playHover } = useSound()
 
+  // Make sure a pending close timer doesn't fire after the component unmounts.
   useEffect(() => {
     return () => {
       if (closeTimeoutRef.current) window.clearTimeout(closeTimeoutRef.current)
     }
   }, [])
 
+  // While open, listen for clicks outside the menu and the Escape key so the
+  // dropdown behaves like a standard disclosure widget.
   useEffect(() => {
     if (!open) return undefined
 
@@ -42,11 +52,15 @@ export default function Dropdown({ label, items }) {
       ref={rootRef}
       className="relative"
       onMouseEnter={() => {
+        // Cancel any scheduled close from a previous mouse-leave before
+        // reopening, so quickly re-entering the trigger doesn't flicker shut.
         if (closeTimeoutRef.current) window.clearTimeout(closeTimeoutRef.current)
         playHover()
         setOpen(true)
       }}
       onMouseLeave={() => {
+        // Delay closing slightly so the user has time to move the pointer
+        // from the trigger into the open menu without it disappearing.
         closeTimeoutRef.current = window.setTimeout(() => setOpen(false), 150)
       }}
     >
@@ -89,6 +103,8 @@ export default function Dropdown({ label, items }) {
               href="#"
               role="menuitem"
               onClick={(event) => {
+                // Items are display-only placeholders (no real destinations
+                // yet), so just play feedback and close the menu.
                 event.preventDefault()
                 playClick()
                 setOpen(false)

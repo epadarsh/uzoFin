@@ -7,13 +7,23 @@ import MobileNav from './MobileNav.jsx'
 import { useSound } from '../../hooks/soundContext.js'
 import { NAV_LINKS } from './navLinks.js'
 
+/**
+ * Sticky site header: logo/tagline, desktop nav (with hover dropdowns for
+ * Payments/Payouts), sound toggle, primary CTA, and a hamburger trigger for
+ * the mobile nav panel below the `lg` breakpoint.
+ */
 export default function Header() {
+  // Toggles a translucent/blurred background once the user has scrolled past
+  // a small threshold, so the header stays legible over any section content.
   const [scrolled, setScrolled] = useState(false)
+  // Controls whether the <MobileNav> slide-in panel is open.
   const [mobileOpen, setMobileOpen] = useState(false)
   const { playClick, playHover } = useSound()
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 24)
+    // Run once on mount too, in case the page loads already scrolled (e.g.
+    // via an in-page anchor link).
     onScroll()
     window.addEventListener('scroll', onScroll, { passive: true })
     return () => window.removeEventListener('scroll', onScroll)
@@ -28,6 +38,7 @@ export default function Header() {
       }`}
     >
       <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4 lg:px-10">
+        {/* Logo + tagline, linking back to the top of the page. */}
         <a href="#top" className="flex flex-col leading-none">
           <Logo />
           <span className="mt-1 text-[10px] tracking-wide text-white/50">
@@ -35,8 +46,12 @@ export default function Header() {
           </span>
         </a>
 
+        {/* Desktop navigation — hidden below `lg`, replaced by the hamburger +
+            MobileNav panel on smaller screens. */}
         <nav className="hidden items-center gap-8 lg:flex">
           {NAV_LINKS.map((link) =>
+            // Links with sub-items render as a hover/click dropdown; plain
+            // links render as a simple anchor.
             link.items ? (
               <Dropdown key={link.label} label={link.label} items={link.items} />
             ) : (
@@ -55,6 +70,7 @@ export default function Header() {
           )}
         </nav>
 
+        {/* Right-hand desktop controls: mute toggle + primary CTA. */}
         <div className="hidden items-center gap-3 lg:flex">
           <SoundToggle />
           <Button href="#start-building" size="sm">
@@ -62,6 +78,8 @@ export default function Header() {
           </Button>
         </div>
 
+        {/* Hamburger trigger, visible only below `lg`; opens the slide-in
+            MobileNav panel rendered just below. */}
         <button
           type="button"
           onClick={() => {

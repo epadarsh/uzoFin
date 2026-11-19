@@ -7,8 +7,12 @@ import ribbon1 from '../../assets/feature/ribbon-1.png'
 import ribbon2 from '../../assets/feature/ribbon-2.png'
 import ribbon3 from '../../assets/feature/ribbon-3.png'
 
+// Three pre-rendered frames of the "ribbon" graphic, swapped in sequence to
+// fake a rotating 3D object purely with image src-swapping (see the
+// ScrollTrigger effect below) - no real 3D rendering is involved.
 const RIBBON_FRAMES = [ribbon1, ribbon2, ribbon3]
 
+// Top-of-section headline stats, each rendered by <StatCounter>.
 const HERO_STATS = [
   {
     end: 11.5,
@@ -34,6 +38,8 @@ const HERO_STATS = [
   },
 ]
 
+// The 4 product-pillar cards in the "Intelligent Financial Suite" grid, each
+// rendered by <FeatureCard> with its own counter.
 const FEATURE_CARDS = [
   {
     title: 'AI Banking',
@@ -70,6 +76,10 @@ const FEATURE_CARDS = [
   },
 ]
 
+/**
+ * Single stat line that counts up (via useCounter) once scrolled into view.
+ * Used for the three large headline numbers at the top of the section.
+ */
 function StatCounter({ end, decimals = 0, suffix = '', wordAfter, label, className }) {
   const [ref, value] = useCounter({ end, decimals })
   return (
@@ -84,6 +94,11 @@ function StatCounter({ end, decimals = 0, suffix = '', wordAfter, label, classNa
   )
 }
 
+/**
+ * One product card in the "Intelligent Financial Suite" grid: title,
+ * description, and its own count-up metric, plus a fade-up scroll reveal
+ * and a hover lift.
+ */
 function FeatureCard({ title, accent, description, end, suffix = '', label }) {
   const [counterRef, value] = useCounter({ end })
   const revealRef = useScrollReveal({ y: 20 })
@@ -106,7 +121,9 @@ function FeatureCard({ title, accent, description, end, suffix = '', label }) {
 
 /** Section 3 — stats, scroll-scrubbed "3D" ribbon, and the feature-card grid. */
 export default function FeatureShowcase() {
+  // The whole section, used as the ScrollTrigger's trigger element below.
   const sectionRef = useRef(null)
+  // The <img> whose `src` gets swapped between ribbon frames as the user scrolls.
   const ribbonRef = useRef(null)
   const headingRef = useScrollReveal({ y: 24 })
   const suiteRef = useScrollReveal({ y: 24 })
@@ -118,11 +135,16 @@ export default function FeatureShowcase() {
     const img = ribbonRef.current
     if (!section || !img) return undefined
 
+    // ScrollTrigger.create (rather than attaching scrollTrigger to a tween)
+    // lets us drive a plain DOM mutation (img.src) directly from scroll
+    // progress instead of animating a numeric/style property.
     const trigger = ScrollTrigger.create({
       trigger: section,
       start: 'top bottom',
       end: 'bottom top',
       onUpdate: (self) => {
+        // self.progress goes from 0 (section just entered) to 1 (section
+        // about to leave); map that range onto a frame index 0..N-1.
         const frame = Math.min(
           RIBBON_FRAMES.length - 1,
           Math.floor(self.progress * RIBBON_FRAMES.length),

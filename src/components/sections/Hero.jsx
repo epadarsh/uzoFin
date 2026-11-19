@@ -5,6 +5,9 @@ import { useScrollReveal } from '../../hooks/useScrollReveal.js'
 
 /** Section 1 — full-bleed dark hero with gradient headline and two CTAs. */
 export default function Hero() {
+  // Fade+rise each direct child of the content wrapper (heading, paragraph,
+  // button row) into view, slightly staggered, as soon as the page loads
+  // (start: 'top 95%' fires almost immediately since the hero is above the fold).
   const contentRef = useScrollReveal({ stagger: 0.12, y: 30, start: 'top 95%' })
 
   return (
@@ -29,6 +32,9 @@ export default function Hero() {
       >
         <h1 className="text-3xl leading-tight font-semibold sm:text-5xl lg:text-6xl">
           AI-powered{' '}
+          {/* Gradient-filled text: the span's background is clipped to its text
+              shape (bg-clip-text) and the text color itself is made
+              transparent, so the gradient shows through the glyphs. */}
           <span className="bg-linear-to-r from-sky-400 to-violet-500 bg-clip-text text-transparent">
             Banking &amp; Payment Solutions
           </span>{' '}
@@ -40,6 +46,8 @@ export default function Hero() {
           financial operations together so you can scale without friction.
         </p>
 
+        {/* Primary filled CTA + secondary outline CTA, matching the design's
+            "START BUILDING" / "READ DOCS" pairing. */}
         <div className="mt-10 flex flex-wrap items-center justify-center gap-4">
           <Button href="#start-building">START BUILDING</Button>
           <Button href="#docs" variant="outline">

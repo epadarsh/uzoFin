@@ -8,6 +8,8 @@ import Button from '../ui/Button.jsx'
 /** Section 7 — final CTA with floating iridescent disc decorations. */
 export default function FinalCta() {
   const contentRef = useScrollReveal({ y: 28, stagger: 0.1 })
+  // The decorative disc-pattern background image, continuously drifted via
+  // the GSAP tween below.
   const discRef = useRef(null)
   // const { playClick, playHover } = useSound()
 
@@ -15,6 +17,8 @@ export default function FinalCta() {
     const el = discRef.current
     if (!el) return undefined
 
+    // Slow ambient float + slight rotation, yoyo-ing back and forth forever
+    // to feel alive without drawing attention away from the CTA copy.
     const tween = gsap.to(el, {
       y: -6,
       rotate: 8,
@@ -45,6 +49,8 @@ export default function FinalCta() {
           </span>
         </h2>
 
+        {/* Primary + secondary CTA, each playing sound feedback via Button's
+            own internal useSound() call. */}
         <div className="mt-10 flex flex-wrap items-center justify-center gap-4">
           <Button href="#docs">BOOK A DEMO</Button>
           <Button href="#docs" variant="outline">BUILD AI</Button>

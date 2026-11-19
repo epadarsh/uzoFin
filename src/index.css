@@ -1,5 +1,9 @@
 @import 'tailwindcss';
 
+/* Tailwind v4 design tokens. Anything defined here becomes both a CSS custom
+   property (e.g. --color-brand-500) and a generated utility class
+   (e.g. bg-brand-500, text-brand-500), replacing the old tailwind.config.js
+   theme-extension approach from Tailwind v3. */
 @theme {
   --font-sans: 'Poppins', system-ui, sans-serif;
 
@@ -12,20 +16,26 @@
   --color-brand-600: #7b2ff0;
   --color-brand-700: #631fc7;
 
+  /* Secondary accent colors used sparingly for highlights/decorative gradients. */
   --color-accent-pink: #ff3f8e;
   --color-accent-orange: #ff9a3f;
   --color-accent-blue: #3f9aff;
   --color-accent-green: #2fd48f;
 
+  /* Near-black "ink" neutrals used for dark section backgrounds and body text. */
   --color-ink-900: #0b0712;
   --color-ink-700: #241b33;
   --color-ink-500: #6b6375;
 
+  /* Extra breakpoint below Tailwind's default `sm` (640px), for fine-tuning
+     very small phone layouts. */
   --breakpoint-xs: 420px;
 }
 
 :root {
   color-scheme: light;
+  /* Disable OS-level font ligature/kerning substitution so text renders
+     identically across browsers. */
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
@@ -37,6 +47,7 @@
 }
 
 html {
+  /* Smooth-scrolls to in-page anchors (e.g. header nav links to #section-id). */
   scroll-behavior: smooth;
 }
 
@@ -45,6 +56,8 @@ body {
   font-family: var(--font-sans);
   color: var(--color-ink-900);
   background: #fff;
+  /* Prevents horizontal scrollbars caused by full-bleed decorative images
+     (e.g. Hero's bg-left/bg-right) that intentionally overflow the viewport. */
   overflow-x: hidden;
 }
 
@@ -55,6 +68,8 @@ body {
     var(--color-brand-500),
     var(--color-accent-pink)
   );
+  /* Clip the background to the text glyphs, then make the text itself
+     transparent so the gradient shows through as the letterforms' fill. */
   background-clip: text;
   -webkit-background-clip: text;
   color: transparent;
@@ -71,6 +86,11 @@ body {
   
 }
 
+/* Gradient-bordered outline button: uses a pseudo-element mask trick to draw
+   only the 1px border ring with a gradient, since a plain `border-image`
+   would ignore `border-radius` and render a rectangular edge instead. The
+   mask subtracts the inner content-box from the padding-box, leaving only
+   the 1px ring visible. */
 .btn-outline::before {
   content: '';
   position: absolute;
@@ -103,6 +123,8 @@ body {
   filter: brightness(1.02);
 }
 
+/* Highlight color for user text selection, matching the brand palette
+   instead of the browser default blue. */
 ::selection {
   background: var(--color-brand-300);
   color: var(--color-ink-900);
