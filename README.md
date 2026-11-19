@@ -180,26 +180,15 @@ The project targets modern evergreen browsers with support for:
 - Web Audio API
 - GSAP and ScrollTrigger
 
-## Deployment
-
-After running `npm run build`, deploy the contents of `dist/` to any static web host, such as:
-
-- Netlify
-- Vercel
-- GitHub Pages
-- Cloudflare Pages
-- An Nginx or Apache static site deployment
-
-Configure the host to serve `index.html` for the root route. The current landing page is a single-page implementation and does not require server-side routing.
-
 ## Known Considerations
 
 - Browser autoplay restrictions require an initial user gesture before Web Audio tones can play.
 - `useMarquee` can clone animated tracks; list keys and accessibility attributes should remain unique and valid.
 - GSAP transforms should be used with Tailwind transforms carefully to avoid transform conflicts.
-- External links and CTA destinations can be replaced with real product URLs or route anchors.
+- External links and CTA destinations can be replaced with more real product URLs or route anchors.
 
-## License
+## Assumptions
 
-Add the appropriate project or organization license here before distributing the application publicly.
- 
+- No backend/API exists — all CTAs, forms, and links are static placeholders, not wired to real endpoints.
+- Content (copy, stats, testimonials, social links) is illustrative, recreated to match the visual prototype rather than sourced from a real UzOFin API or CMS.
+- Sound effects are optional UX polish, synthesized via the Web Audio API — no audio asset files are bundled.
