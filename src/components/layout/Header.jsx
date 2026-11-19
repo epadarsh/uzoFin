@@ -4,14 +4,8 @@ import Button from '../ui/Button.jsx'
 import Dropdown from '../ui/Dropdown.jsx'
 import SoundToggle from '../ui/SoundToggle.jsx'
 import MobileNav from './MobileNav.jsx'
-import { useSound } from '../../hooks/useSound.jsx'
-
-export const NAV_LINKS = [
-  { label: 'AI Banking', href: '#ai-banking', active: true },
-  { label: 'Payments', items: ['Payment Links', 'Checkout', 'Invoicing'] },
-  { label: 'Payouts', items: ['Bulk Payouts', 'Vendor Payments', 'Settlements'] },
-  { label: 'Support', href: '#support' },
-]
+import { useSound } from '../../hooks/soundContext.js'
+import { NAV_LINKS } from './navLinks.js'
 
 export default function Header() {
   const [scrolled, setScrolled] = useState(false)

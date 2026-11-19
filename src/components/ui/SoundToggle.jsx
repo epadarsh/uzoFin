@@ -1,4 +1,4 @@
-import { useSound } from '../../hooks/useSound.jsx'
+import { useSound } from '../../hooks/soundContext.js'
 
 /** Mute/unmute toggle for the site's click/hover sound effects. */
 export default function SoundToggle({ className = '' }) {

@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
-import { useSound } from '../../hooks/useSound.jsx'
+import { useSound } from '../../hooks/soundContext.js'
 
 /**
  * Nav dropdown with a chevron that flips open/closed (see Nav.png).

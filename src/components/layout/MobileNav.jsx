@@ -3,8 +3,8 @@ import { gsap } from '../../lib/gsap'
 import Logo from '../ui/Logo.jsx'
 import Button from '../ui/Button.jsx'
 import SoundToggle from '../ui/SoundToggle.jsx'
-import { NAV_LINKS } from './Header.jsx'
-import { useSound } from '../../hooks/useSound.jsx'
+import { NAV_LINKS } from './navLinks.js'
+import { useSound } from '../../hooks/soundContext.js'
 
 /** Slide-in mobile navigation panel, shown below the `lg` breakpoint. */
 export default function MobileNav({ open, onClose }) {

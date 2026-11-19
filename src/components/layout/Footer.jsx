@@ -1,6 +1,6 @@
 import Logo from '../ui/Logo.jsx'
 import { useScrollReveal } from '../../hooks/useScrollReveal.js'
-import { useSound } from '../../hooks/useSound.jsx'
+import { useSound } from '../../hooks/soundContext.js'
 
 const COLUMNS = [
 	{

@@ -1,5 +1,5 @@
 import { useEffect, useRef } from 'react'
-import { gsap, ScrollTrigger } from '../../lib/gsap'
+import { ScrollTrigger } from '../../lib/gsap'
 import { useCounter } from '../../hooks/useCounter.js'
 import { useScrollReveal } from '../../hooks/useScrollReveal.js'
 import bgDark from '../../assets/feature/bg-dark.png'

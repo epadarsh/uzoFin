@@ -1,7 +1,7 @@
 import { useEffect, useRef } from 'react'
 import { gsap } from '../../lib/gsap'
 import { useScrollReveal } from '../../hooks/useScrollReveal.js'
-import { useSound } from '../../hooks/useSound.jsx'
+// import { useSound } from '../../hooks/useSound.jsx'
 import bgDiscs from '../../assets/finalcta/bg-discs.png'
 import Button from '../ui/Button.jsx'
 
@@ -9,7 +9,7 @@ import Button from '../ui/Button.jsx'
 export default function FinalCta() {
   const contentRef = useScrollReveal({ y: 28, stagger: 0.1 })
   const discRef = useRef(null)
-  const { playClick, playHover } = useSound()
+  // const { playClick, playHover } = useSound()
 
   useEffect(() => {
     const el = discRef.current

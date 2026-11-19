@@ -1,4 +1,4 @@
-import { useSound } from '../../hooks/useSound.jsx'
+import { useSound } from '../../hooks/soundContext.js'
 
 const base =
   'inline-flex items-center justify-center gap-2 rounded-full font-medium transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-400 focus-visible:ring-offset-2 focus-visible:ring-offset-transparent whitespace-nowrap'
